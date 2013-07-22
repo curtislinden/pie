@@ -1,0 +1,199 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>HTML5 Worksheet</title>
+    <meta name="description" content="HTML5 worksheet">
+    <meta name="author" content="Curtis Schofield / DR9 / Ram9.cc">
+    <!-- mobile friendly : single page app - no zooming - device sensitive -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <!-- give myself a consistant element style model to work with -->
+    <link rel="stylesheet" href="reset.css">
+
+     <script type='text/javascript' src='jq.js'></script> 
+     <script type='text/javascript' src='jq-ui-core.js'></script> 
+     <script type='text/javascript' src='mod.js'></script> 
+     <script type='text/javascript' src='radmenu.js'></script> 
+     <script type='text/javascript'>
+     </script>
+ 
+  <!--
+      need to load blocking scripts mid document or in the head?
+      use async loading 
+
+      <script type='text/javascript'>
+        (function() {
+          var asyncScript = document.createElement('script');
+          asyncScript.src = 'http://code.jquery.com/jquery-1.7.2.js';
+          var thisScript = document.getElementsByTagName('script')[0];
+          thisScript.parentNode.insertBefore(asyncScript,thisScript);
+        })();
+      </script>
+      -->
+   <style>
+    .boundingarea {
+      position: relative;
+      top: 19px;
+      width: 900px;
+      height:1500px;
+      background:#181818;
+      margin: auto;
+    }
+
+    .clickarea {
+      position:relative;
+      top:150px;
+      margin:auto;
+      width:600px;
+      height:1200px;
+      background:#fff;
+    }
+
+    #radial_container {
+      width:200px;
+      height:200px;
+      text-align:center;
+    }
+    .radial_div_item {
+      background-color:none;
+      height:30px;
+      padding:10px;
+      color:#234;
+      -moz-border-radius:10px;
+      -webkit-border-radius:10px;
+      cursor:pointer;
+      text-align:center;
+    }
+    .radial_div_item.active {
+      background-color:#511; color:white;
+      padding: 10px; 
+      -moz-border-radius:40px;
+      z-index:100;
+      
+    }
+    .radial_div_item:hover {
+      background-color:#eee;
+
+      padding: 10px; 
+      -moz-border-radius:50%;
+      -webkit-border-radius:50%;
+      z-index:100;
+      
+    }
+    .menu-entry {
+      font-size:0.9em;
+      color:#abc;
+      width:50px;
+      height:50px;
+      text-align:center;
+    }
+    .icon {
+      background-repeat: no-repeat;
+      width: 40px;
+      height:39px;
+      display: inline-block;
+    }
+    .scene {
+      background-image:url('link.png');
+    }
+    .video {
+      background-image:url('video.png');
+    }
+    .text {
+      background-image:url('text.png');
+    }
+    .photo {
+      background-image:url('photo.png');
+    }
+   </style>
+  </head>
+  <body>
+  <div class='boundingarea'>
+    <div class='clickarea'>
+      <div id='radial_container'>
+        <ul class='list'>
+          <li class='item'  ><div data-preset-type='scene'  class='menu-entry'><div class='icon   scene'></div> scene </div>	</li>
+          <li class='item'  ><div data-preset-type='photo' class='menu-entry '><div class='icon   photo'></div>  photo  </div>	</li>
+          <li class='item'  ><div data-preset-type='text'  class='menu-entry '><div class='icon   text'></div>  text  </div>	</li>
+          <li class='item'  ><div data-preset-type='video' class='menu-entry '><div class='icon   video'></div>  video  </div>	</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+// https://github.com/tysonmatanich/viewportSize
+    var diagnostic = function(event) {
+      console.log('-------------------------')
+      console.log(event.currentTarget)
+      console.log('clientHeight ', event.currentTarget.clientHeight)
+      console.log('clientWidth ', event.currentTarget.clientWidth)
+      console.log('position left, top ', $(event.currentTarget).position().left, ', ',
+                               $(event.currentTarget).position().top )
+      console.log('offset left, top ',$(event.currentTarget).offset().left, ', ',
+                                     $(event.currentTarget).offset().top )
+      console.log(event)
+      console.log('event ; pagex, pagey ',event.pageX,', ' ,event.pageY)
+
+      console.log('event ;clientx, clienty  ',event.clientX, ', ', event.clientY)
+
+      console.log('window ; width , height ', $(window).width(), ', ',
+                                             $(window).height())
+
+
+
+      var pageXOffset = (window.pageXOffset !== undefined) ? window.pageXOffset : (document.documentElement || document.body.parentNode || document.body).scrollLeft;
+      var pageYOffset = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+      console.log('window ; pageXOffset , pageYOffset', pageXOffset, ',  ',
+                                                        pageYOffset)
+
+
+
+
+      var winTargetX = event.pageX - pageXOffset ;
+      var winTargetY = event.pageY - pageYOffset ;
+
+      console.log('page check window scroll boundary target;  x  ', winTargetX, ', y ', winTargetY)
+
+      var boxTargetX = event.pageX - $(event.currentTarget).offset().left
+      var boxTargetY = event.pageY - $(event.currentTarget).offset().top   ;
+
+      console.log('page check offset box boundary target;  x  ', boxTargetX, ', y ', boxTargetY)
+
+
+
+      console.log('-------------------------')
+    }
+    
+    jQuery("#radial_container").radmenu({
+      listClass: 'list', // the list class to look within for items
+      itemClass: 'item', // the items - NOTE: the HTML inside the item is copied into the menu item
+      radius:60, // radius in pixels
+      animSpeed:100, // animation speed in millis
+      centerX: 60, // the center x axis offset
+      centerY: 60, // the center y axis offset
+      selectEvent: "click", // the select event (click)
+      onSelect: function($selected){ // show what is returned 
+        console.log($selected);
+        console.log($selected.find('.menu-entry'))
+        alert("you clicked on .. "  + $selected.find('.menu-entry').attr('data-preset-type'));
+        jQuery("#radial_container").radmenu('hide');
+      },
+      angleOffset: 0 // in degrees
+    });
+    
+    $('.clickarea').click(function(event){
+
+      $('#radial_container').position({
+        of:event,
+        collision:'fit',
+        my: 'top left'
+      })
+      $("#radial_container").radmenu('show');
+    });
+
+  </script>
+  </body>
+</html>
+
