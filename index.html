@@ -55,6 +55,16 @@
       height:200px;
       text-align:center;
     }
+      #radial_container   .cross {
+      position:relative;
+      width: 50px;
+      height: 50px;
+      top:140px;
+      left:70px;
+      display:none;
+      background-image: url('cross.png');
+      background-repeat: no-repeat;
+    }
     .radial_div_item {
       background-color:none;
       height:30px;
@@ -79,6 +89,7 @@
     }
     .menu-entry {
       font-size:0.9em;
+      line-height:0.3em;
       color:#abc;
       width:50px;
       height:50px;
@@ -112,8 +123,9 @@
   <body>
   <div class='boundingarea'>
     <div class='clickarea'>
-      <div class='drag-thing'> </div>
+      <div class='drag-thing'> hi </div>
       <div id='radial_container'>
+        <div class='cross'> </div>
         <ul class='rlist'>
           <li class='ritem'  ><div data-preset-type='scene'  class='menu-entry'><div class='icon   scene'></div> scene </div>	</li>
           <li class='ritem'  ><div data-preset-type='photo' class='menu-entry '><div class='icon   photo'></div>  photo  </div>	</li>
@@ -171,6 +183,7 @@
 
     $('.drag-thing').draggable();
 
+
     jQuery("#radial_container").radmenu({
       listClass: 'rlist', // the list class to look within for items
       itemClass: 'ritem', // the items - NOTE: the HTML inside the item is copied into the menu item
@@ -184,13 +197,22 @@
         console.log($selected.find('.menu-entry'))
         alert("you clicked on .. "  + $selected.find('.menu-entry').attr('data-preset-type'));
         jQuery("#radial_container").radmenu('hide');
+        jQuery("#radial_container").find('.cross').hide();
       },
       angleOffset: 0 // in degrees
     });
     
+    $('.cross').click(function(event) {
+      console.log('cross');
+      jQuery("#radial_container").radmenu('hide');
+      jQuery("#radial_container").find('.cross').hide();
+      event.stopPropagation()
+      return false;
+    })
     $('.clickarea').click(function(event){
 
 
+      jQuery("#radial_container").find('.cross').show();
       // needs width and height for position to make sense of how much space to give it
       $('#radial_container').position({
         of:event,
@@ -199,7 +221,6 @@
       })
       $("#radial_container").radmenu('show');
     });
-    
   </script>
   </body>
 </html>
