@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="reset.css">
 
      <script type='text/javascript' src='jq.js'></script> 
-     <script type='text/javascript' src='jq-ui-core.js'></script> 
+     <script type='text/javascript' src='jq-ui-core-extra.js'></script> 
      <script type='text/javascript' src='mod.js'></script> 
      <script type='text/javascript' src='radmenu.js'></script> 
      <script type='text/javascript'>
@@ -66,10 +66,6 @@
       text-align:center;
     }
     .radial_div_item.active {
-      background-color:#511; color:white;
-      padding: 10px; 
-      -moz-border-radius:40px;
-      z-index:100;
       
     }
     .radial_div_item:hover {
@@ -106,17 +102,23 @@
     .photo {
       background-image:url('menu-photo.png');
     }
+    .drag-thing {
+      width: 50px;
+      height: 50px;
+      background: pink;
+    }
    </style>
   </head>
   <body>
   <div class='boundingarea'>
     <div class='clickarea'>
+      <div class='drag-thing'> </div>
       <div id='radial_container'>
-        <ul class='list'>
-          <li class='item'  ><div data-preset-type='scene'  class='menu-entry'><div class='icon   scene'></div> scene </div>	</li>
-          <li class='item'  ><div data-preset-type='photo' class='menu-entry '><div class='icon   photo'></div>  photo  </div>	</li>
-          <li class='item'  ><div data-preset-type='text'  class='menu-entry '><div class='icon   text'></div>  text  </div>	</li>
-          <li class='item'  ><div data-preset-type='video' class='menu-entry '><div class='icon   video'></div>  video  </div>	</li>
+        <ul class='rlist'>
+          <li class='ritem'  ><div data-preset-type='scene'  class='menu-entry'><div class='icon   scene'></div> scene </div>	</li>
+          <li class='ritem'  ><div data-preset-type='photo' class='menu-entry '><div class='icon   photo'></div>  photo  </div>	</li>
+          <li class='ritem'  ><div data-preset-type='text'  class='menu-entry '><div class='icon   text'></div>  text  </div>	</li>
+          <li class='ritem'  ><div data-preset-type='video' class='menu-entry '><div class='icon   video'></div>  video  </div>	</li>
         </ul>
       </div>
     </div>
@@ -166,9 +168,12 @@
       console.log('-------------------------')
     }
     
+
+    $('.drag-thing').draggable();
+
     jQuery("#radial_container").radmenu({
-      listClass: 'list', // the list class to look within for items
-      itemClass: 'item', // the items - NOTE: the HTML inside the item is copied into the menu item
+      listClass: 'rlist', // the list class to look within for items
+      itemClass: 'ritem', // the items - NOTE: the HTML inside the item is copied into the menu item
       radius:60, // radius in pixels
       animSpeed:100, // animation speed in millis
       centerX: 60, // the center x axis offset
@@ -185,6 +190,8 @@
     
     $('.clickarea').click(function(event){
 
+
+      // needs width and height for position to make sense of how much space to give it
       $('#radial_container').position({
         of:event,
         collision:'fit',
@@ -192,7 +199,7 @@
       })
       $("#radial_container").radmenu('show');
     });
-
+    
   </script>
   </body>
 </html>
